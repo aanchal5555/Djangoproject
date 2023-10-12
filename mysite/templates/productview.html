@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container" style="padding:10px;">
+    <div class="row">
+        <div class="col-md-4">
+            <img src="/media/{{product.product_image|safe}}" width="200px" height="200px">
+
+            
+            <button type="button" class="btn btn-primary btn-sm">Buy Now</button>
+
+            <span id="divpr{{product.id}}">
+            <button type="button" id="pr{{product.id}}" class="btn btn-primary btn-sm cart ">Add to Cart</button>
+            </span>
+            
+        </div>
+        <div class="col-md-8">
+            <h5>{{product.product_name|safe}}</h5>
+            <p>{{product.product_desc|safe}}</p>
+            <p>{{product.product_price|safe}}</p>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block js %}
+
+<script>
+  
+  // Initialize the cart count to 0 when the page loads
+updateCart(cart);
+var cartCount = 0;
+
+if (localStorage.getItem('cart') == null) {
+  var cart = {};
+} else {
+  cart = JSON.parse(localStorage.getItem('cart'));
+  // Calculate the initial cart count based on the cart object
+  cartCount = Object.keys(cart).length;
+  updateCart(cart);
+  updateCartCount();
+}
+
+$('.cart').click(function () {
+  console.log('clicked');
+  var idstr = this.id.toString();
+  
+  if (cart[idstr] != undefined) {
+    cart[idstr] = cart[idstr] + 1;
+  } else {
+    cart[idstr] = 1;
+  }
+  updateCart(cart);
+
+  console.log(cart);
+
+  localStorage.setItem('cart', JSON.stringify(cart));
+  
+  // Increment the cart count and update the display
+  cartCount++;
+  updateCartCount();
+});
+
+function updateCartCount() {
+  document.getElementById('cartcart').innerHTML = cartCount.toString();
+}
+  
+
+$(document).ready(function () {
+  // Initialize the popover
+  $('#popcart').popover({
+      content: function () {
+          return '<h5>Cart for your items in my shopping cart</h5>';
+      },
+      html: true  // Enable HTML content in popover
+  });
+});
+
+
+function updateCart(cart) {
+  for (var item in cart) {
+    var element = document.getElementById('div'+item);
+    if (element) {
+      element.innerHTML =
+        "<button id='minus" +
+        item +
+        "' class='btn btn-primary minus'>-</button> <span id='val" +
+        item +
+        "'>" +
+        cart[item] +
+        "</span><button id='plus" +
+        item +
+        "' class='btn btn-primary plus'>+</button>";
+    } else {
+      console.error("Element with id '" + item + "' not found.");
+    }
+  }
+}
+
+
+
+
+
+
+</script>
+
+
+
+{% endblock %}

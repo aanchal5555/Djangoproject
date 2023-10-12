@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load custom_filters %}
+
+{% block content %}
+
+<div class="product-main">
+  <h2 class="title">New Products</h2>
+  <div class="product-grid">
+      {% for product in productdata %}
+      <div class="showcase">
+          <div class="showcase-banner">
+              <img src="/media/{{ product.product_image|safe }}" alt="{{ product.product_name }}" width="300" class="product-img default">
+              <img src="/media/{{ product.product_image|safe }}" alt="{{ product.product_name }}" width="300" class="product-img hover">
+              <p class="showcase-badge">{{ product.showcase_badge }}</p>
+              <div class="showcase-actions">
+                  <button class="btn-action">
+                      <ion-icon name="heart-outline"></ion-icon>
+                  </button>
+                  <button class="btn-action">
+                      <ion-icon name="eye-outline"></ion-icon>
+                  </button>
+                  <button class="btn-action">
+                      <ion-icon name="repeat-outline"></ion-icon>
+                  </button>
+                  <button class="btn-action cart" id="{{ product.id }}">
+                      <ion-icon name="bag-add-outline"></ion-icon>
+                  </button>
+              </div>
+          </div>
+          <div class="showcase-content">
+              <a href="#" class="showcase-category">{{ product.product_name|safe }}</a>
+              <a href="#">
+                  <h3 class="showcase-title">{{ product.product_desc|slice:":50"|safe }}...</h3>
+              </a>
+              <div class="showcase-rating">
+                  {% for _ in product.showcase_rating|default:0|get_range %}
+                      <ion-icon name="star"></ion-icon>
+                  {% endfor %}
+                  {% for _ in product.rating_difference|default:0|get_range %}
+                      <ion-icon name="star-outline"></ion-icon>
+                  {% endfor %}
+              </div>
+              <div class="price-box">
+                  <p class="price">&#x20B9;{{ product.discounted_price|safe }}</p>
+                  <del>&#x20B9;{{ product.product_price|safe }}</del>
+              </div>
+          </div>
+      </div>
+      {% endfor %}
+  </div>
+</div>
+
+{% endblock %}
